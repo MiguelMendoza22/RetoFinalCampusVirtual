@@ -4,7 +4,7 @@ Feature: Crear ruta de aprendizaje
   Para poder asignarlas a estudiantes
 
   Scenario Outline: Crear ruta de aprendizaje exitoso
-    Given que el administrador se encuentra en la pagina de crear cursos
+    Given que el administrador se encuentra en la pagina de crear rutas
     When el administrador envia una peticion con el id del coach <coachID>, el titulo de la ruta <title> y la descripcion de la ruta <description>
     Then debera recibir un body con el id del coach <coachID>, el titulo de la ruta <title> y la descripcion de la ruta <description> y un codigo de estado <statusCode>
     Examples:
@@ -15,7 +15,7 @@ Feature: Crear ruta de aprendizaje
 
 
   Scenario Outline: Crear ruta de aprendizaje fallida
-    Given que el administrador se encuentra en la pagina de crear cursos
+    Given que el administrador se encuentra en la pagina de crear rutas
     When el administrador envia una peticion con el id del coach <coachID>, el titulo de la ruta <title> y la descripcion de la ruta <description>
     Then debera recibir un mensaje <Message>  y un codigo de estado <statusCode>
     Examples:

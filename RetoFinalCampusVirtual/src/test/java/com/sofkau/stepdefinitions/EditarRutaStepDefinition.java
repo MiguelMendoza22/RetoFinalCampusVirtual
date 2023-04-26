@@ -1,7 +1,7 @@
 package com.sofkau.stepdefinitions;
 
 
-import com.sofkau.models.rutasdeaprendizaje.CuerpoCrearRuta;
+import com.sofkau.models.rutasdeaprendizaje.CuerpoEditarRuta;
 import com.sofkau.models.rutasdeaprendizaje.ResponseCrearRutaExitosa;
 import com.sofkau.models.rutasdeaprendizaje.ResponseCrearRutaFallida;
 import com.sofkau.setup.ApiSetUp;
@@ -16,23 +16,19 @@ import org.junit.jupiter.api.Assertions;
 
 import static com.sofkau.questions.rutasdeaprendizaje.ReturnCrearRutaExitosaResponse.returnCrearRutaExitosaResponse;
 import static com.sofkau.questions.rutasdeaprendizaje.ReturnCrearRutaFallidaResponse.returnCrearRutaFallidaResponse;
-import static com.sofkau.tasks.DoPost.doPost;
-import static com.sofkau.utils.CampusVirtual.CAMPUS_VIRTUAL_BASE_URL;
-
-import static com.sofkau.utils.CampusVirtual.CREATE_PATH_RESOURCE;
+import static com.sofkau.tasks.DoPut.doPut;
+import static com.sofkau.utils.CampusVirtual.*;
 import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 
+public class EditarRutaStepDefinition extends ApiSetUp {
+    public static Logger LOGGER = Logger.getLogger(EditarRutaStepDefinition.class);
+    private CuerpoEditarRuta cuerpoEditarRuta = new CuerpoEditarRuta();
 
-public class CrearRutaStepDefinition extends ApiSetUp {
-    public static Logger LOGGER = Logger.getLogger(CrearRutaStepDefinition.class);
-    private CuerpoCrearRuta cuerpoCrearRuta = new CuerpoCrearRuta();
-
-    @Given("que el administrador se encuentra en la pagina de crear rutas")
-    public void queElAdministradorSeEncuentraEnLaPaginaDeCrearRutas() {
-
+    @Given("que el administrador se encuentra en la pagina de actualizar rutas")
+    public void queElAdministradorSeEncuentraEnLaPaginaDeActualizarRutas() {
         try {
             setUp(CAMPUS_VIRTUAL_BASE_URL.getValue());
             LOGGER.info("Se inicio la automatizacion en la URL: " + CAMPUS_VIRTUAL_BASE_URL.getValue());
@@ -45,29 +41,27 @@ public class CrearRutaStepDefinition extends ApiSetUp {
         }
     }
 
-    @When("el administrador envia una peticion con el id del coach {string}, el titulo de la ruta {string} y la descripcion de la ruta {string}")
-    public void elAdministradorEnviaUnaPeticionConElIdDelCoachElTituloDeLaRutaYLaDescripcionDeLaRuta(String coachID, String title, String description) {
-
+    @When("el adminitrador envia una peticion a la ruta {string} con el cuerpo que contiene el id del coach {string}, el titulo de la ruta {string} y la descripcion de la ruta {string}")
+    public void elAdminitradorEnviaUnaPeticionALaRutaConElCuerpoQueContieneElIdDelCoachElTituloDeLaRutaYLaDescripcionDeLaRuta(String id, String coachID, String title, String description) {
         try {
-            cuerpoCrearRuta.setCoachID(coachID);
-            cuerpoCrearRuta.setTitle(title);
-            cuerpoCrearRuta.setDescription(description);
+            cuerpoEditarRuta.setCoachID(coachID);
+            cuerpoEditarRuta.setTitle(title);
+            cuerpoEditarRuta.setDescription(description);
+            cuerpoEditarRuta.setDuration(0);
+            cuerpoEditarRuta.setStatePath(1);
             actor.attemptsTo(
-                    doPost()
-                            .withTheResource(CREATE_PATH_RESOURCE.getValue())
-                            .andTheRequestBody(cuerpoCrearRuta)
+                    doPut().withResource(EDIT_PATH_ID_RESOURCE.getValue() + id)
+                            .andTheRequestBody(cuerpoEditarRuta)
             );
             LOGGER.info(SerenityRest.lastResponse().body().asString());
-        } catch (Exception e) {
-            LOGGER.error("Ocurrio un error al enviar la solicitud POST: " + e.getMessage());
+        }   catch (Exception e) {
+            LOGGER.error("Ocurrio un error al enviar la solicitud PUT: " + e.getMessage());
             e.printStackTrace();
         }
-
     }
 
-    @Then("debera recibir un body con el id del coach {string}, el titulo de la ruta {string} y la descripcion de la ruta {string} y un codigo de estado {int}")
-    public void deberaRecibirUnBodyConElIdDelCoachElTituloDeLaRutaYLaDescripcionDeLaRutaYUnCodigoDeEstado(String coachID, String title, String description, Integer statusCode) {
-
+    @Then("el adminitrador debera recibir un body con el id del coach {string}, el titulo de la ruta {string} y la descripcion de la ruta {string} y un codigo de estado {int}")
+    public void elAdminitradorDeberaRecibirUnBodyConElIdDelCoachElTituloDeLaRutaYLaDescripcionDeLaRutaYUnCodigoDeEstado(String coachID, String title, String description, Integer statusCode) {
         try {
             ResponseCrearRutaExitosa responseCrearRutaExitosa = returnCrearRutaExitosaResponse().answeredBy(actor);
             actor.should(
@@ -85,11 +79,10 @@ public class CrearRutaStepDefinition extends ApiSetUp {
             LOGGER.warn(e.getMessage());
             Assertions.fail();
         }
-
     }
 
-    @Then("debera recibir un mensaje {string}  y un codigo de estado {int}")
-    public void deberaRecibirUnMensajeYUnCodigoDeEstado(String Message, Integer statusCode) {
+    @Then("debera recibir un mensaje de error y un codigo de estado {int}")
+    public void deberaRecibirUnMensajeDeErrorYUnCodigoDeEstado(Integer statusCode) {
         String responseBody = SerenityRest.lastResponse().getBody().asString();
         JsonPath jsonPath = new JsonPath(responseBody);
         try {
@@ -107,5 +100,6 @@ public class CrearRutaStepDefinition extends ApiSetUp {
             Assertions.fail();
         }
     }
+
 
 }
