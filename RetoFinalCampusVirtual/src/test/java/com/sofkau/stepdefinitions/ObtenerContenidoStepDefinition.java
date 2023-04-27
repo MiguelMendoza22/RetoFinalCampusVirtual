@@ -1,6 +1,5 @@
 package com.sofkau.stepdefinitions;
 
-import com.sofkau.models.rutasdeaprendizaje.ResponseCrearRutaExitosa;
 import com.sofkau.setup.ApiSetUp;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -9,23 +8,22 @@ import io.restassured.path.json.JsonPath;
 import net.serenitybdd.rest.SerenityRest;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.Assertions;
 
-import static com.sofkau.questions.rutasdeaprendizaje.ReturnCrearRutaExitosaResponse.returnCrearRutaExitosaResponse;
 import static com.sofkau.tasks.DoGet.doGet;
 import static com.sofkau.utils.CampusVirtual.*;
 import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
-public class ObtenerRutaStepDefinition extends ApiSetUp {
-
-    public static Logger LOGGER = Logger.getLogger(ObtenerRutaStepDefinition.class);
-    @Given("Que el usuario se encuentra en la pagina de obtener rutas")
-    public void queElUsuarioSeEncuentraEnLaPaginaDeObtenerRutas() {
-
+public class ObtenerContenidoStepDefinition extends ApiSetUp {
+    public static Logger LOGGER = Logger.getLogger(ObtenerContenidoStepDefinition.class);
+    @Given("que el usuario se encuentra en la pagina de obtener contenido")
+    public void queElUsuarioSeEncuentraEnLaPaginaDeObtenerContenido() {
         try {
             setUp(CAMPUS_VIRTUAL_BASE_URL.getValue());
             LOGGER.info("Se inicio la automatizacion en la URL: " + CAMPUS_VIRTUAL_BASE_URL.getValue());
@@ -38,12 +36,12 @@ public class ObtenerRutaStepDefinition extends ApiSetUp {
         }
     }
 
-    @When("el adminitrador envia una peticion para obtener todos los rutas")
-    public void elAdminitradorEnviaUnaPeticionParaObtenerTodosLosRutas() {
+    @When("el usuario envia una peticion para obtener todos los contenidos")
+    public void elUsuarioEnviaUnaPeticionParaObtenerTodosLosContenidos() {
         try {
             actor.attemptsTo(
                     doGet()
-                            .withTheResource(GET_PATH_RESOURCE.getValue())
+                            .withTheResource(CONTENT_COURSE_RESOURCE.getValue())
             );
             LOGGER.info(SerenityRest.lastResponse().body().asString());
         } catch (Exception e) {
@@ -52,8 +50,8 @@ public class ObtenerRutaStepDefinition extends ApiSetUp {
         }
     }
 
-    @Then("el administrador debera recibir un body de respuesta y un codigo de estado {int}")
-    public void elAdministradorDeberaRecibirUnBodyDeRespuestaYUnCodigoDeEstado(Integer statusCode) {
+    @Then("el usuario debera recibir un body de respuesta y un codigo de estado {int}")
+    public void elUsuarioDeberaRecibirUnBodyDeRespuestaYUnCodigoDeEstado(Integer statusCode) {
         String responseBody = SerenityRest.lastResponse().getBody().asString();
         JsonPath jsonPath = new JsonPath(responseBody);
         try {
@@ -71,12 +69,12 @@ public class ObtenerRutaStepDefinition extends ApiSetUp {
         }
     }
 
-    @When("el adminitrador envia una peticion con el {string} de la ruta de aprendizaje")
-    public void elAdminitradorEnviaUnaPeticionConElDeLaRutaDeAprendizaje(String id) {
+    @When("el usuario envia una peticion para obtener el contenido del curso por {string}")
+    public void elUsuarioEnviaUnaPeticionParaObtenerElContenidoDelCursoPor(String id) {
         try {
             actor.attemptsTo(
                     doGet()
-                            .withTheResource(GET_PATH_ID_RESOURCE.getValue() + id)
+                            .withTheResource(CONTENT_COURSE_RESOURCE.getValue() + id)
             );
             LOGGER.info(SerenityRest.lastResponse().body().asString());
         } catch (Exception e) {
@@ -85,16 +83,27 @@ public class ObtenerRutaStepDefinition extends ApiSetUp {
         }
     }
 
-    @Then("el administrador debera recibir un body con el titulo {string} y un codigo de estado {int}")
-    public void elAdministradorDeberaRecibirUnBodyConElTituloYUnCodigoDeEstado(String title, Integer statusCode) {
+    @Then("el usuario debera ver un body de respuesta con el {string} del contenido y un codigo de estado {int}")
+    public void elUsuarioDeberaVerUnBodyDeRespuestaConElDelContenidoYUnCodigoDeEstado(String title, Integer statusCode) {
+
         try {
-            ResponseCrearRutaExitosa responseCrearRutaExitosa = returnCrearRutaExitosaResponse().answeredBy(actor);
             actor.should(
                     seeThatResponse("El codigo de respuesta es: " + HttpStatus.SC_OK,
-                            response -> response.statusCode(statusCode)),
-                    seeThat("Retorna titulo",
-                            act -> responseCrearRutaExitosa.getTitle(), equalTo(title))
+                            response -> response.statusCode(statusCode))
             );
+            String responseBody = SerenityRest.lastResponse().body().asString();
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = new JSONObject();
+
+            try {
+                jsonObject = (JSONObject) parser.parse(responseBody);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            String titulo = (String) jsonObject.get("title");
+            assertEquals(title, titulo);
+
+
         } catch (Exception e) {
             LOGGER.info("Error al realizar la comparacion");
             LOGGER.warn(e.getMessage());

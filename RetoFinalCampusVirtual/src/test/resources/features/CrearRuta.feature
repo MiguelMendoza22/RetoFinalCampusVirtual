@@ -3,6 +3,8 @@ Feature: Crear ruta de aprendizaje
   Quiero poder crear rutas de aprendizaje
   Para poder asignarlas a estudiantes
 
+
+  @CrearRutaExitosa
   Scenario Outline: Crear ruta de aprendizaje exitoso
     Given que el administrador se encuentra en la pagina de crear rutas
     When el administrador envia una peticion con el id del coach <coachID>, el titulo de la ruta <title> y la descripcion de la ruta <description>
@@ -13,7 +15,7 @@ Feature: Crear ruta de aprendizaje
       | "Coach2" | "Ruta SQL"    | "Ruta para apreder SQL desde cero"    | 200        |
       | "Coach3" | "Ruta Java"   | "Ruta para aprender Java desde cero"  | 200        |
 
-
+  @CrearRutaFallida
   Scenario Outline: Crear ruta de aprendizaje fallida
     Given que el administrador se encuentra en la pagina de crear rutas
     When el administrador envia una peticion con el id del coach <coachID>, el titulo de la ruta <title> y la descripcion de la ruta <description>

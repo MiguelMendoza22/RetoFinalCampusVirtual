@@ -14,6 +14,7 @@ Feature: Actualizar ruta de aprendizaje
       | "CF77EF30-9B82-4F6B-AA17-107C38F8DB09" | "Coach11" | "La mejor ruta para aprender Java" | "Ruta para ser el mejor en phyton" | 200        |
 
 
+  @ActualizarRutaFallida
   Scenario Outline: Editar Fallido
     Given que el administrador se encuentra en la pagina de actualizar rutas
     When el adminitrador envia una peticion a la ruta <id> con el cuerpo que contiene el id del coach <coachID>, el titulo de la ruta <title> y la descripcion de la ruta <description>

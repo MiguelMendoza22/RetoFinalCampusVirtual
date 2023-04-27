@@ -47,8 +47,6 @@ public class EditarRutaStepDefinition extends ApiSetUp {
             cuerpoEditarRuta.setCoachID(coachID);
             cuerpoEditarRuta.setTitle(title);
             cuerpoEditarRuta.setDescription(description);
-            cuerpoEditarRuta.setDuration(0);
-            cuerpoEditarRuta.setStatePath(1);
             actor.attemptsTo(
                     doPut().withResource(EDIT_PATH_ID_RESOURCE.getValue() + id)
                             .andTheRequestBody(cuerpoEditarRuta)
