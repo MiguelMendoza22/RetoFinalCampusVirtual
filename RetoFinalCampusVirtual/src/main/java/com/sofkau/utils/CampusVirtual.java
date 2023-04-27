@@ -3,6 +3,7 @@ package com.sofkau.utils;
 public enum CampusVirtual {
     CAMPUS_VIRTUAL_BASE_URL("https://localhost:7245/"),
     CONTENT_COURSE_RESOURCE("api/Content/"),
+    EDIT_CONTENT_RESOURCE("api/Content?idContent="),
     CREATE_PATH_RESOURCE("api/LearningPath/CreateLearningPath"),
     CREATE_COURSES("api/Course"),
     GET_PATH_RESOURCE("api/LearningPath"),
