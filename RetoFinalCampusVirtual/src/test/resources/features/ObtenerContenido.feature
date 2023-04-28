@@ -18,6 +18,6 @@ Feature: Obtener
     Then el usuario debera ver un body de respuesta con el <title> del contenido y un codigo de estado <statusCode>
     Examples:
       | id                                     | title                         | statusCode |
-      | "ecab12da-71ad-4a77-93ac-009b92128e8d" | "reto programacion basica"    | 200        |
-      | "52d8bbe4-2264-4544-b337-01972b17383a" | "Leccion programacion basica" | 200        |
-      | "affee3d0-e9f3-4b9f-8111-822d9d22402b" | "Taller programacion basica"  | 200        |
+      | "ecab12da-71ad-4a77-93ac-009b92128e8d" | "reto de programacion basica" | 200        |
+      | "52d8bbe4-2264-4544-b337-01972b17383a" | "lectura de base de datos"    | 200        |
+      | "fba26744-ce6a-4ba0-8c71-febde122dcfd" | "Taller programacion basica"  | 200        |

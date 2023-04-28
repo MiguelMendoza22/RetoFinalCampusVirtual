@@ -9,6 +9,6 @@ Feature: Eliminar Contenido
     Then el adminitrador debera recibir un codigo  <statusCode>
     Examples:
       | id                                     | statusCode |
-      | "f6a502fd-4663-47ea-9483-048256ae9803" | 200        |
-      | "50bf51a0-bf36-40ba-9605-112e49f6be9c" | 200        |
-      | "e182a108-8cfc-48ce-bc18-384513ad6b22" | 200        |
+      | "a620a51d-ace4-4877-b480-35cd6c7f8c70" | 200        |
+      | "9ed416fb-5b91-40d6-a30f-3871351ed9f8" | 200        |
+      | "6bcfd14f-51bd-4a74-838e-48f4726a6e2d" | 200        |

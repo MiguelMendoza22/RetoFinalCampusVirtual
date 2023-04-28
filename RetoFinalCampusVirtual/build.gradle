@@ -55,4 +55,4 @@ test {
 
 gradle.startParameter.continueOnFailure = true
 
-//test.finalizedBy(aggregate)
+test.finalizedBy(aggregate)
